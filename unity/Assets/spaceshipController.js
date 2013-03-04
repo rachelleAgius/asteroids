@@ -2,6 +2,7 @@
 var speed:int;
 var rotation:int;
 function Start () {
+	lives = 3;
 
 }
 
@@ -13,7 +14,7 @@ function Update () {
 	var top = Camera.main.ScreenToWorldPoint(Vector3(0,0,0)).y;
 
 	transform.Translate(Vector3.down*speed*Input.GetAxis("Vertical")*Time.deltaTime);
-	transform.Rotate(Vector3.forward*rotation*Input.GetAxis("Horizontal")*Time.deltaTime);
+	transform.Rotate(Vector3.back*rotation*Input.GetAxis("Horizontal")*Time.deltaTime);
 	
 	if(transform.position.x < leftmost)
 		transform.position.x = rightmost;
@@ -27,4 +28,24 @@ function Update () {
 	if(transform.position.y < top)
 		transform.position.y = bottom;
 
+}
+
+var lives:int;
+
+
+function OnTriggerEnter(other:Collider)
+{
+	if(other.gameObject.tag == "asteroid")
+	{
+		lives--;
+		if(lives == 0)
+		{
+			Destroy(this.gameObject);
+		}
+	}	
+}
+
+function OnGUI()
+{
+	GUI.Label(Rect(5,5,50,25), "Lives: "+lives);
 }
