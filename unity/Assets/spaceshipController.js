@@ -1,6 +1,10 @@
 #pragma strict
 var speed:int;
 var rotation:int;
+var turbo:int;
+var normalSpeed:int;
+var laserPrefab:Rigidbody;
+
 function Start () {
 	lives = 3;
 
@@ -12,6 +16,12 @@ function Update () {
 	var leftmost = Camera.main.ScreenToWorldPoint(Vector3(0,0,0)).x;
 	var bottom = Camera.main.ScreenToWorldPoint(Vector3(Screen.width,Screen.height,0)).y;
 	var top = Camera.main.ScreenToWorldPoint(Vector3(0,0,0)).y;
+	
+	speed = normalSpeed;
+	if(Input.GetKey(KeyCode.Space))
+	{
+		speed = turbo;
+	}
 
 	transform.Translate(Vector3.down*speed*Input.GetAxis("Vertical")*Time.deltaTime);
 	transform.Rotate(Vector3.back*rotation*Input.GetAxis("Horizontal")*Time.deltaTime);
@@ -26,7 +36,12 @@ function Update () {
 		transform.position.y = top;
 		
 	if(transform.position.y < top)
-		transform.position.y = bottom;
+		transform.position.y = bottom;	
+		
+	if(Input.GetKeyDown(KeyCode.LeftControl))
+	{
+		Instantiate(laserPrefab,transform.position,transform.rotation);
+	}
 
 }
 
@@ -48,4 +63,5 @@ function OnTriggerEnter(other:Collider)
 function OnGUI()
 {
 	GUI.Label(Rect(5,5,50,25), "Lives: "+lives);
+	GUI.Label(Rect(5,30,100,25), "Speed: "+speed);
 }
